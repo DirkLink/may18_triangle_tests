@@ -2,6 +2,7 @@
 # 2. Run `ruby triangle_test.rb`. You should see 6 error messages.
 # 3. Implement the Triangle class until all 6 tests are passing.
 require "minitest/autorun"
+require 'pry'
 
 class Triangle
   def initialize x, y, z
@@ -10,28 +11,60 @@ class Triangle
     @side3 = z
   end
 
-  def kind 
-    if @side1==@side2 and @side1 == @side3
-      return :equilateral
+  def is_triangle x, y, z
+    a = array.new
+    a = [x,y,z]
+    a.each do |sides|
+      if sides.is_a? Integer = false
+        return :invalid
     end
-
-    if @side1 == @side2 or @side1 == @side3 or @side2 == @side3
-      return :isosceles
+    
+    if @side1 <= 0 && @side2 <= 0 && @side3 <= 0
+      :notvalid
     end
-
-    if @side1 != @side2 or @side1 != @side3 or @side2 =! @side3
-      return :scalene
-    end
-
   end
+
+  def kind 
+    if @side1 <= 0 || @side2 <= 0 || @side3 <= 0
+      :notvalid
+    else
+      if @side1==@side2 && @side1 == @side3
+        :equilateral
+      elsif @side1 != @side2 && @side1 != @side3 && @side2 =! @side3
+        :scalene
+      else
+        :isosceles
+      end
+    end
+  end
+
   def perimeter
-    return @side1+@side2+@side3
+    if @side1 <= 0 || @side2 <= 0 || @side3 <= 0
+      return :notvalid
+    else 
+      @side1+@side2+@side3
+    end
   end
 
 
 end
-
+binding.pry
 class TestMeme < Minitest::Test
+  def test_zero_side
+    t = Triangle.new(0,1,2)
+    assert_equal :notvalid, t.perimeter
+  end
+
+  def test_negative_side
+    t = Triangle.new(-1,-2,-3)
+    assert_equal :notvalid, t.kind
+  end
+
+  def test_string_input
+    t = Triangle.new("some text", {foo: 2}, :apple)
+    assert_equal :notvalide, t.kind
+  end
+
   def test_equilateral
     t = Triangle.new(5,5,5)
     assert_equal :equilateral, t.kind
